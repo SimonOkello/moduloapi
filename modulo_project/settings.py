@@ -75,7 +75,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'modulo_project.wsgi.application'
 
-
+REST_FRAMEWORK = {
+    'NON_FIELD_ERRORS_KEY':'error'
+}
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
