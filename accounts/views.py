@@ -16,10 +16,12 @@ import jwt
 from .serializers import RegisterSerializer, LoginSerializer, EmailVerificationSerializer
 from .models import User
 from .utils import Util
+from .renderers import UserRenderer
 
 
 class Register(GenericAPIView):
     serializer_class = RegisterSerializer
+    renderer_classes = (UserRenderer,)
 
     def post(self, request):
         user = request.data
