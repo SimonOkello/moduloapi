@@ -29,7 +29,7 @@ SECRET_KEY = '1)_gxvnlaci_7r=&^%k=qgvgjh8&+3-@^h$kwn34824n2oj#)y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['moduloapi.herokuapp.com', '127.0.0.1']
 
 AUTH_USER_MODEL = 'accounts.User'
 
