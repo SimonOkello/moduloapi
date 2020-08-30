@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'drf_yasg',
     'expenses.apps.ExpensesConfig',
     'income.apps.IncomeConfig',
+    'reports.apps.ReportsConfig',
+    'corsheaders',
+
 ]
 
 SWAGGER_SETTINGS = {
@@ -61,11 +64,13 @@ SWAGGER_SETTINGS = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'modulo_project.urls'
@@ -140,7 +145,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+CORS_ALLOW_ALL_ORIGINS =True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
