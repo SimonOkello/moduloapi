@@ -13,7 +13,7 @@ import jwt
 
 
 # Create your views here.
-from .serializers import RegisterSerializer, EmailVerificationSerializer
+from .serializers import RegisterSerializer, LoginSerializer, EmailVerificationSerializer
 from .models import User
 from .utils import Util
 
@@ -64,3 +64,12 @@ class VerifyEmail(APIView):
             return Response({'error': 'Your Activation link is expired'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
             return Response({'error': 'Invalid token!. Please request for a new one'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginApiView(GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
