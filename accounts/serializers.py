@@ -1,9 +1,15 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate, login
 from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import smart_bytes, smart_str, force_bytes,force_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from rest_framework.response import Response
+from rest_framework import status
 
 
 from .models import User
+from .utils import Util
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -38,8 +44,10 @@ class EmailVerificationSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255, min_length=3)
-    password = serializers.CharField(max_length=68, min_length=6, write_only=True)
-    username = serializers.CharField(max_length=68, min_length=6, read_only=True)
+    password = serializers.CharField(
+        max_length=68, min_length=6, write_only=True)
+    username = serializers.CharField(
+        max_length=68, min_length=6, read_only=True)
     tokens = serializers.CharField(max_length=68, min_length=6, read_only=True)
 
     class Meta:
@@ -64,4 +72,44 @@ class LoginSerializer(serializers.ModelSerializer):
             'username': user.username,
             'tokens': user.tokens()
         }
+        return super().validate(attrs)
+
+
+class PasswordResetSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(min_length=3)
+
+    class Meta:
+        model = User
+        fields = ['email']
+
+
+class SetNewPasswordSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(
+        min_length=6, max_length=68, write_only=True)
+    uidb64 = serializers.CharField(min_length=1, write_only=True)
+    token = serializers.CharField(min_length=1, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['password', 'uidb64', 'token']
+
+    def validate(self, attrs):
+
+        try:
+            password = attrs.get('password', '')
+            uidb64 = attrs.get('uidb64', '')
+            token = attrs.get('token', '')
+
+            user_id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=user_id)
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                raise AuthenticationFailed('The password reset link is invalid', status=status.HTTP_401_UNAUTHORIZED)
+            user.set_password(password)
+            user.save()
+            return user
+
+        except Exception as e:
+            raise AuthenticationFailed('The password reset link is invalid', status=status.HTTP_401_UNAUTHORIZED)
+
         return super().validate(attrs)
