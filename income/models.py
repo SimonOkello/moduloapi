@@ -4,20 +4,17 @@ from django.conf import settings
 # Create your models here.
 
 
-class Expense(models.Model):
+class Income(models.Model):
 
-    EXPENSE_CATEGORY = [
-        ('Travel', 'Travel'),
-        ('Rent', 'Rent'),
-        ('Food', 'Food'),
-        ('Internet', 'Internet'),
-        ('Electricity', 'Electricity'),
-        ('Vacation', 'Vacation'),
-        ('Netflix', 'Netflix'),
-        ('Other', 'Other'),
+    SOURCE_CATEGORY = [
+        ('Salary', 'Salary'),
+        ('Gift', 'Gift'),
+        ('Freelance', 'Freelance'),
+        ('Loan', 'Loan'),
+        ('Business', 'Business'),
     ]
 
-    category = models.CharField(choices=EXPENSE_CATEGORY, max_length=255)
+    source = models.CharField(choices=SOURCE_CATEGORY, max_length=255)
     owner = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     description = models.TextField()
@@ -29,4 +26,4 @@ class Expense(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return str(self.owner) + ' expense'
+        return str(self.owner) + ' income'

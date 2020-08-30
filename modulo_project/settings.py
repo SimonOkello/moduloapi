@@ -45,12 +45,13 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'drf_yasg',
     'expenses.apps.ExpensesConfig',
+    'income.apps.IncomeConfig',
 ]
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
-            'type':'apiKey',
+            'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
         }
@@ -88,7 +89,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'modulo_project.wsgi.application'
 
 REST_FRAMEWORK = {
-    'NON_FIELD_ERRORS_KEY':'error',
+    'NON_FIELD_ERRORS_KEY': 'error',
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
